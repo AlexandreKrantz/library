@@ -1,8 +1,26 @@
 let myLibrary = [];
 
+// getLibrary
+if (localStorage.getItem("library") != null) {
+  let localData = JSON.parse(localStorage.getItem("library"));
+  localData.forEach((book) => {
+    book = new Book(book.title, book.author, book.pages, book.read);
+    addBookToLibrary(book);
+    renderLibrary(myLibrary);
+  });
+}
+
 function addBookToLibrary(book) {
   myLibrary.push(book);
   console.log(myLibrary);
+  localStorage.setItem("library", JSON.stringify(myLibrary));
+}
+
+function deleteBookFromLibrary(index) {
+  index = parseInt(index);
+  myLibrary.splice(index, 1);
+  document.getElementById(index).remove();
+  localStorage.setItem("library", JSON.stringify(myLibrary));
 }
 
 function Book(title, author, pages, read) {
@@ -23,12 +41,6 @@ Book.prototype.toggleRead = function () {
 function toggleRead(index) {
   myLibrary[index].toggleRead();
   renderLibrary(myLibrary);
-}
-
-function deleteBookFromLibrary(index) {
-  index = parseInt(index);
-  myLibrary.splice(index, 1);
-  document.getElementById(index).remove();
 }
 
 function renderLibrary(library) {
@@ -71,8 +83,6 @@ function renderLibrary(library) {
   });
   document.getElementById("books").innerHTML = output;
 }
-
-renderLibrary(myLibrary);
 
 const title = document.getElementById("title");
 const author = document.getElementById("author");
